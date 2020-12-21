@@ -1,3 +1,11 @@
+# 山大树洞
+
+## SDU Web 技术 小组课程作业 前端部分
+
+### 大概用了 React+redux+antd 等等等等吧
+
+---
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
