@@ -1,4 +1,7 @@
 import {
+  GEN_STOKEN_FAILURE,
+  GEN_STOKEN_REQUEST,
+  GEN_STOKEN_SUCCESS,
   GET_HOLELIST_FAILURE,
   GET_HOLELIST_REQUEST,
   GET_HOLELIST_SUCCESS,
@@ -10,6 +13,7 @@ const defaultState = {
   holeList: [],
   replyList: {},
   loading: false,
+  genloading: false,
   message: '',
 };
 const home = (state = defaultState, action) => {
@@ -20,6 +24,12 @@ const home = (state = defaultState, action) => {
       return { ...state, loading: false, holeList: action.payload.reverse() };
     case GET_HOLELIST_FAILURE:
       return { ...state, loading: false };
+    case GEN_STOKEN_REQUEST:
+      return { ...state, genloading: true };
+    case GEN_STOKEN_SUCCESS:
+      return { ...state, genloading: false };
+    case GEN_STOKEN_FAILURE:
+      return { ...state, genloading: false };
     case GET_REPLY_SUCCESS:
       return {
         ...state,

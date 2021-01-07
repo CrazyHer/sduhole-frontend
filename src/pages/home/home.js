@@ -29,7 +29,7 @@ import './home.css';
 const Home = () => {
   const dispatch = useDispatch();
 
-  let { holeList, replyList } = useSelector((state) => state.home);
+  let { holeList, replyList, genloading } = useSelector((state) => state.home);
   let { stoken } = useSelector((state) => state.user);
   let [form] = useForm();
   useEffect(() => {
@@ -88,7 +88,9 @@ const Home = () => {
           <p>您可以：</p>
           <div>
             <p>1.</p>
-            <Button onClick={() => onGetStoken()}>请求生成新Token</Button>
+            <Button loading={genloading} onClick={() => onGetStoken()}>
+              请求生成新Token
+            </Button>
             <p>注意：每位用户终身只有3次请求生成SToken的机会</p>
           </div>
           <div>

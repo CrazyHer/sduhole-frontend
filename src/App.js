@@ -14,6 +14,7 @@ import Layout from './components/layout';
 const Login = lazy(() => import('./pages/login/login'));
 const Register = lazy(() => import('./pages/register/register'));
 const Home = lazy(() => import('./pages/home/home'));
+
 function App() {
   let { token, stoken } = useSelector((state) => state.user);
   if (token) axios.defaults.headers['token'] = token;
