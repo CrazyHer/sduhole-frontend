@@ -23,6 +23,8 @@ import {
   unExpandReply,
 } from './home_redux';
 import axios from 'axios';
+import Markdown from 'react-markdown';
+import gfm from 'remark-gfm';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -125,7 +127,10 @@ const Home = () => {
                     name="content"
                     rules={[{ required: true, message: '请填写树洞内容' }]}
                   >
-                    <TextArea placeholder="输入树洞内容" rows={4} />
+                    <TextArea
+                      placeholder="输入树洞内容，支持基本Markdown语法"
+                      rows={4}
+                    />
                   </Form.Item>
                 </Form>
               ),
@@ -140,10 +145,17 @@ const Home = () => {
       </div>
 
       <List
-        className="comment-list"
+        className="hole-list"
         header={`${holeList.length} 条树洞`}
         itemLayout="horizontal"
+        size="large"
+        pagination={{
+          pageSize: 15,
+          position: 'both',
+          hideOnSinglePage: true,
+        }}
         dataSource={holeList.map((v) => ({
+          //操作面板
           actions: [
             <span
               onClick={() =>
@@ -161,7 +173,10 @@ const Home = () => {
                         name="content"
                         rules={[{ required: true, message: '请填写回复内容' }]}
                       >
-                        <TextArea placeholder="输入回复内容" rows={4} />
+                        <TextArea
+                          placeholder="输入回复内容，支持基本Markdown语法"
+                          rows={4}
+                        />
                       </Form.Item>
                     </Form>
                   ),
@@ -179,17 +194,23 @@ const Home = () => {
                   折叠评论
                 </span>
               ) : (
-                <span onClick={() => expandReply(v.hole.holeId)}>展开评论</span>
+                <span onClick={() => expandReply(v.hole.holeId)}>
+                  展开评论 ({v.hole.childCount}条)
+                </span>
               )}
             </span>,
           ],
+          //树洞用户的随机化昵称
           author: v.holeUser.holeUserName,
-          content: v.hole.content,
+          //树洞内容，支持markdown语法
+          content: <Markdown plugins={[gfm]} source={v.hole.content} />,
+          //发布时间
           datetime: (
             <Tooltip title={v.hole.date}>
               <span>{moment(v.hole.date).fromNow()}</span>
             </Tooltip>
           ),
+          //嵌套显示子评论
           children: (
             <div>
               {replyList[v.hole.holeId] &&
@@ -197,7 +218,9 @@ const Home = () => {
                   <Comment
                     key={i}
                     author={item.holeUser.holeUserName}
-                    content={item.hole.content}
+                    content={
+                      <Markdown plugins={[gfm]} source={item.hole.content} />
+                    }
                     datetime={
                       <Tooltip title={item.hole.date}>
                         <span>{moment(item.hole.date).fromNow()}</span>
