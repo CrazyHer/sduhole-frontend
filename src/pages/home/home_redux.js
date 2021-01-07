@@ -42,6 +42,11 @@ export const getHoleList = (holeId = 0) => (dispatch) => {
     .then((res) => {
       if (res.code === 0) {
         dispatch({ type: GET_HOLELIST_SUCCESS, payload: res.data });
+      } else if (res.code === 40034) {
+        dispatch({ type: SUBMIT_HOLE_FAILURE });
+        dispatch(setStoken(''));
+        localStorage.clear();
+        message.error('失败：' + res.message);
       } else {
         dispatch({ type: GET_HOLELIST_FAILURE });
         message.error('获取树洞失败：' + res.message);
@@ -135,4 +140,10 @@ export const UNEXPAND_REPLY = 'UNEXPAND_REPLY';
 export const unExpandReply = (holeId) => ({
   type: UNEXPAND_REPLY,
   payload: holeId,
+});
+
+export const SET_STOKEN = 'SET_STOKEN';
+export const setStoken = (stoken) => ({
+  type: SET_STOKEN,
+  payload: stoken,
 });

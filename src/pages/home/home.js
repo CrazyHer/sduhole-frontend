@@ -18,9 +18,11 @@ import {
   getHoleList,
   getReplyList,
   getStoken,
+  setStoken,
   submitHole,
   unExpandReply,
 } from './home_redux';
+import axios from 'axios';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -30,7 +32,8 @@ const Home = () => {
   let [form] = useForm();
   useEffect(() => {
     dispatch(getHoleList());
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [stoken]);
 
   const onGetStoken = () => {
     dispatch(getStoken());
@@ -38,6 +41,9 @@ const Home = () => {
 
   const onStokenSubmit = (e) => {
     console.log(e);
+    dispatch(setStoken(e.stoken));
+    axios.defaults.headers['stoken'] = e.stoken;
+    localStorage.setItem('stoken', e.stoken);
   };
 
   const onReplySubmit = (e) => {

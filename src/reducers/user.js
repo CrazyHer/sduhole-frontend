@@ -1,9 +1,5 @@
-import { GEN_STOKEN_SUCCESS } from '../pages/home/home_redux';
-import {
-  LOGIN_REQUEST,
-  LOGIN_SUCCESS,
-  LOGOFF,
-} from '../pages/login/login_redux';
+import { GEN_STOKEN_SUCCESS, SET_STOKEN } from '../pages/home/home_redux';
+import { LOGIN_SUCCESS, LOGOFF } from '../pages/login/login_redux';
 
 const defaultState = {
   token: localStorage.getItem('token') || sessionStorage.getItem('token') || '',
@@ -32,6 +28,11 @@ const user = (state = defaultState, action) => {
         token: '',
         refresh_token: '',
         stoken: localStorage.getItem('stoken') || '',
+      };
+    case SET_STOKEN:
+      return {
+        ...state,
+        stoken: action.payload,
       };
     default:
       return state;
