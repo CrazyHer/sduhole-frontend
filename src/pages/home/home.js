@@ -10,7 +10,6 @@ import {
   Tooltip,
 } from 'antd';
 import moment from 'moment';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'antd/lib/form/Form';
 import TextArea from 'antd/lib/input/TextArea';
@@ -25,6 +24,7 @@ import {
 import axios from 'axios';
 import Markdown from 'react-markdown';
 import gfm from 'remark-gfm';
+import './home.css';
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -67,6 +67,7 @@ const Home = () => {
 
   if (!stoken)
     return (
+      //这个是stoken无效时的提示界面
       <div>
         <Alert
           message="无权限：SToken无效"
@@ -109,7 +110,9 @@ const Home = () => {
         </div>
       </div>
     );
+
   return (
+    //这个是主页面
     <div>
       <div>
         <Button
@@ -143,106 +146,108 @@ const Home = () => {
           发布一条树洞
         </Button>
       </div>
-
-      <List
-        className="hole-list"
-        header={`${holeList.length} 条树洞`}
-        itemLayout="horizontal"
-        size="large"
-        pagination={{
-          pageSize: 15,
-          position: 'both',
-          hideOnSinglePage: true,
-        }}
-        dataSource={holeList.map((v) => ({
-          //操作面板
-          actions: [
-            <span
-              onClick={() =>
-                Modal.confirm({
-                  icon: null,
-                  title: `回复${v.holeUser.holeUserName}的树洞`,
-                  content: (
-                    <Form
-                      form={form}
-                      onFinish={(e) =>
-                        onReplySubmit({ ...e, parentId: v.hole.holeId })
-                      }
-                    >
-                      <Form.Item
-                        name="content"
-                        rules={[{ required: true, message: '请填写回复内容' }]}
+      <div className="hole-list">
+        <List
+          header={`${holeList.length} 条树洞`}
+          itemLayout="horizontal"
+          size="large"
+          pagination={{
+            pageSize: 15,
+            position: 'both',
+            hideOnSinglePage: true,
+          }}
+          dataSource={holeList.map((v) => ({
+            //操作面板
+            actions: [
+              <span
+                onClick={() =>
+                  Modal.confirm({
+                    icon: null,
+                    title: `回复${v.holeUser.holeUserName}的树洞`,
+                    content: (
+                      <Form
+                        form={form}
+                        onFinish={(e) =>
+                          onReplySubmit({ ...e, parentId: v.hole.holeId })
+                        }
                       >
-                        <TextArea
-                          placeholder="输入回复内容，支持基本Markdown语法"
-                          rows={4}
-                        />
-                      </Form.Item>
-                    </Form>
-                  ),
-                  onOk: () => form.validateFields().then(() => form.submit()),
-                  okText: '提交',
-                  centered: true,
-                })
-              }
-            >
-              回复
-            </span>,
-            <span>
-              {replyList[v.hole.holeId] ? (
-                <span onClick={() => onUnExpandReply(v.hole.holeId)}>
-                  折叠评论
-                </span>
-              ) : (
-                <span onClick={() => expandReply(v.hole.holeId)}>
-                  展开评论 ({v.hole.childCount}条)
-                </span>
-              )}
-            </span>,
-          ],
-          //树洞用户的随机化昵称
-          author: v.holeUser.holeUserName,
-          //树洞内容，支持markdown语法
-          content: <Markdown plugins={[gfm]} source={v.hole.content} />,
-          //发布时间
-          datetime: (
-            <Tooltip title={v.hole.date}>
-              <span>{moment(v.hole.date).fromNow()}</span>
-            </Tooltip>
-          ),
-          //嵌套显示子评论
-          children: (
-            <div>
-              {replyList[v.hole.holeId] &&
-                replyList[v.hole.holeId].map((item, i) => (
-                  <Comment
-                    key={i}
-                    author={item.holeUser.holeUserName}
-                    content={
-                      <Markdown plugins={[gfm]} source={item.hole.content} />
-                    }
-                    datetime={
-                      <Tooltip title={item.hole.date}>
-                        <span>{moment(item.hole.date).fromNow()}</span>
-                      </Tooltip>
-                    }
-                  />
-                ))}
-            </div>
-          ),
-        }))}
-        renderItem={(item) => (
-          <li>
-            <Comment
-              actions={item.actions}
-              author={item.author}
-              content={item.content}
-              datetime={item.datetime}
-              children={item.children}
-            />
-          </li>
-        )}
-      />
+                        <Form.Item
+                          name="content"
+                          rules={[
+                            { required: true, message: '请填写回复内容' },
+                          ]}
+                        >
+                          <TextArea
+                            placeholder="输入回复内容，支持基本Markdown语法"
+                            rows={4}
+                          />
+                        </Form.Item>
+                      </Form>
+                    ),
+                    onOk: () => form.validateFields().then(() => form.submit()),
+                    okText: '提交',
+                    centered: true,
+                  })
+                }
+              >
+                回复
+              </span>,
+              <span>
+                {replyList[v.hole.holeId] ? (
+                  <span onClick={() => onUnExpandReply(v.hole.holeId)}>
+                    折叠评论
+                  </span>
+                ) : (
+                  <span onClick={() => expandReply(v.hole.holeId)}>
+                    展开评论 ({v.hole.childCount}条)
+                  </span>
+                )}
+              </span>,
+            ],
+            //树洞用户的随机化昵称
+            author: v.holeUser.holeUserName,
+            //树洞内容，支持markdown语法
+            content: <Markdown plugins={[gfm]} source={v.hole.content} />,
+            //发布时间
+            datetime: (
+              <Tooltip title={v.hole.date}>
+                <span>{moment(v.hole.date).fromNow()}</span>
+              </Tooltip>
+            ),
+            //嵌套显示子评论
+            children: (
+              <div>
+                {replyList[v.hole.holeId] &&
+                  replyList[v.hole.holeId].map((item, i) => (
+                    <Comment
+                      key={i}
+                      author={item.holeUser.holeUserName}
+                      content={
+                        <Markdown plugins={[gfm]} source={item.hole.content} />
+                      }
+                      datetime={
+                        <Tooltip title={item.hole.date}>
+                          <span>{moment(item.hole.date).fromNow()}</span>
+                        </Tooltip>
+                      }
+                    />
+                  ))}
+              </div>
+            ),
+          }))}
+          renderItem={(item) => (
+            <li>
+              <Comment
+                actions={item.actions}
+                author={item.author}
+                content={item.content}
+                datetime={item.datetime}
+                children={item.children}
+              />
+            </li>
+          )}
+        />
+      </div>
     </div>
   );
 };
