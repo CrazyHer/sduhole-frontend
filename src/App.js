@@ -15,9 +15,9 @@ const Login = lazy(() => import('./pages/login/login'));
 const Register = lazy(() => import('./pages/register/register'));
 const Home = lazy(() => import('./pages/home/home'));
 function App() {
-  let { token } = useSelector((state) => state.user);
-  axios.defaults.headers['token'] = token;
-
+  let { token, stoken } = useSelector((state) => state.user);
+  if (token) axios.defaults.headers['token'] = token;
+  if (stoken) axios.defaults.headers['stoken'] = stoken;
   let location = useLocation().pathname;
   let history = useHistory();
   useEffect(() => {

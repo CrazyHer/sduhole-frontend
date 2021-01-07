@@ -14,7 +14,7 @@ export const onRegister = ({ userName, password, email }) => (dispatch) => {
     .then((res) => res.data)
     .then((res) => {
       if (res.code === 0) {
-        dispatch(onLogin(userName, password, false));
+        dispatch(onLogin({ u: userName, p: password, autoLogin: false }));
         dispatch({ type: REGISTER_SUCCESS });
         message.success('注册成功！');
       } else {

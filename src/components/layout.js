@@ -1,18 +1,23 @@
 import { Button, Dropdown, Layout, Menu } from 'antd';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../assets/logo-light.png';
-import './layout.css';
 import { onLogoff } from '../pages/login/login_redux';
+import './layout.css';
 
 const _Layout = ({ children }) => {
   let location = useLocation().pathname;
-  let { userName } = useSelector((state) => state.user);
+  let { stoken } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  const logoff = () => {
+    onLogoff(dispatch);
+  };
 
   const menu = (
     <Menu>
       <Menu.Item>
-        <Button onClick={onLogoff} type="text">
+        <Button onClick={logoff} type="text">
           退出登录
         </Button>
       </Menu.Item>
@@ -31,16 +36,11 @@ const _Layout = ({ children }) => {
               <h1>山大树洞</h1>
             </Link>
           </div>
-          {userName && (
-            <Dropdown overlay={menu}>
-              <Link
-                to="/home"
-                style={{ display: 'flex', alignItems: 'center' }}
-              >
-                <h3>{userName}</h3>
-              </Link>
-            </Dropdown>
-          )}
+          <Dropdown overlay={menu}>
+            <Link to="/home" style={{ display: 'flex', alignItems: 'center' }}>
+              <h3>{stoken ? '匿名' : '无权限'}</h3>
+            </Link>
+          </Dropdown>
         </Layout.Header>
         <Layout.Content className="content">{children}</Layout.Content>
       </Layout>

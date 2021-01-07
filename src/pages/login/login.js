@@ -77,9 +77,6 @@ const Login = () => {
             <Link to="/register" className="register-link">
               注册
             </Link>
-            {/**
-                                <Link to='/login-admin'>管理员登录</Link>
-                             */}
           </Form.Item>
         </Form>
       </div>

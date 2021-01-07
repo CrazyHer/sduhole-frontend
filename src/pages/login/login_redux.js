@@ -40,14 +40,13 @@ export const onLogin = ({ u, p, autoLogin }) => (dispatch) => {
     });
 };
 
-export const onLogoff = () => (dispath) => {
+export const onLogoff = (dispath) => {
   dispath({ type: LOGOFF });
+  console.log(666);
   let stoken = localStorage.getItem('stoken');
   localStorage.clear();
   sessionStorage.clear();
-  localStorage.setItem('stoken', stoken);
+  stoken && localStorage.setItem('stoken', stoken);
 };
 
-export const refreshToken = ()=>(dispatch)=>{
-  
-}
+export const refreshToken = () => (dispatch) => {};
